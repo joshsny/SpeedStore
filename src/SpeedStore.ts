@@ -51,9 +51,7 @@ class SpeedStore {
                 return storeString;
             }, '');
         
-        console.log(encodedString)
-        
-        this.memcache = Compress.decompress(encodedString)
+        this.memcache = Utilities.base64Decode(encodedString)
 
         if (this.memcache === null) {
             this.memcache = {}
@@ -68,7 +66,7 @@ class SpeedStore {
         if (!this.memcache) {
             this.retrieveAll()
         }
-        const encodedString = Compress.compress(this.memcache)
+        const encodedString = Utilities.base64Encode(this.memcache)
 
         const chunks = chunkString(encodedString, this.numChunks)
 
