@@ -5,6 +5,9 @@
   "main": "SpeedStore.ts",
   "baseUrl": "src",
   "author": "Joshua Snyder",
+  "scripts": {
+    "watch": "clasp push --watch"
+  },
   "devDependencies": {
     "@types/google-apps-script": "^1.0.20",
     "typescript": "^4.1.3"

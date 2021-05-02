@@ -1,6 +1,6 @@
 import { Compress } from 'Compress.js'
 
-export { getStore };
+export { SpeedStore };
     
 type SpeedStoreConfig  = {
     store: GoogleAppsScript.Properties.Properties;
@@ -14,8 +14,8 @@ class SpeedStore {
     prefix: string;
     numChunks: number;
     constructor(config?: SpeedStoreConfig) {
-        if (config) {
-            this.store = PropertiesService.getUserProperties();
+        if (!config) {
+            this.store = PropertiesService.getScriptProperties();
             this.prefix = 'speedstore_'
             this.numChunks = 50
         }
@@ -28,7 +28,7 @@ class SpeedStore {
             this.retrieveAll();
         }
         if (key in this.memcache) {
-            return JSON.parse(this.memcache[key]);
+            return this.memcache[key];
         } else {
             return null;
         }
@@ -51,11 +51,20 @@ class SpeedStore {
                 return storeString;
             }, '');
         
-        this.memcache =  Compress.decompress(encodedString)
+        console.log(encodedString)
+        
+        this.memcache = Compress.decompress(encodedString)
+
+        if (this.memcache === null) {
+            this.memcache = {}
+        }
+        
+        console.log(this.memcache)
 
     }
 
     putAll() {
+
         if (!this.memcache) {
             this.retrieveAll()
         }
@@ -96,15 +105,15 @@ class SpeedStore {
     }
 }
 
-var store: SpeedStore;
+// var store;
 
-const getStore = (): SpeedStore => {
-    if (!store) {
-        store = new SpeedStore();
-    }
+// const getStore = (): SpeedStore => {
+//     if (!store) {
+//         store = new SpeedStore();
+//     }
 
-    return store;
-};
+//     return store;
+// };
 
 const chunkString = (str: string, numChunks: number): string[] => {
     const size = Math.max(Math.ceil(str.length / numChunks), 1)

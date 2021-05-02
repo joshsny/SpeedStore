@@ -1,3 +1,4 @@
+export {LZString}
 const LZString = (function () {
     function o(o, r) {
         if (!t[o]) {
