@@ -72,11 +72,13 @@ class SpeedStore {
 
         const chunks = chunkString(encodedString, this.numChunks)
 
-        chunks.reduce((chunkedProps, chunk, idx) => {
+        const props = chunks.reduce((chunkedProps, chunk, idx) => {
             chunkedProps[`${this.prefix}_${idx}`] = chunk
 
             return chunkedProps
         }, {})
+
+        this.store.setProperties(props)
 
     }
 
