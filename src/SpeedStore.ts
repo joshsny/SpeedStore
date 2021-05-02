@@ -59,7 +59,15 @@ class SpeedStore {
         if (!this.memcache) {
             this.retrieveAll()
         }
-        const 
+        const encodedString = Compress.compress(this.memcache)
+
+        const chunks = chunkString(encodedString, this.numChunks)
+
+        chunks.reduce((chunkedProps, chunk, idx) => {
+            chunkedProps[`${this.prefix}_${idx}`] = chunk
+
+            return chunkedProps
+        }, {})
 
     }
 
@@ -98,7 +106,7 @@ const getStore = (): SpeedStore => {
     return store;
 };
 
-const chunkString = (str: string, numChunks: number) => {
+const chunkString = (str: string, numChunks: number): string[] => {
     const size = Math.max(Math.ceil(str.length / numChunks), 1)
     const chunks = new Array(numChunks)
 
