@@ -35,9 +35,18 @@ const testSpeedStore = () => {
     testOneSpeedStore("big", 2**10);
     testOneSpeedStore("bigger", 2**12);
     testOneSpeedStore("huge", 2**14);
+    // testEvents("events");
     const end = new Date();
     console.log(`SpeedStore - total time: ${+end - +start}`);
 };
+
+const testEvents = (key) => {
+    const data = eventsData;
+    store.set(key, data);
+    console.log(`key: ${key}`);
+    const recover = store.get(key);
+    if (JSON.stringify(recover) !== JSON.stringify(data)) throw key + "failed";  
+}
 
 const testOneSpeedStore = (key, length) => {
     const data = makeData(length);
