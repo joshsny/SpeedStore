@@ -11,11 +11,11 @@ const runTests = () => {
 
 const testCrusher = () => {
     const start = new Date();
-    testOne("tiny", 8);
-    testOne("small", 256);
-    testOne("big", 1024);
-    testOne("bigger", 4096);
-    testOne("huge", 32768);
+    testOne("tiny", 2**6);
+    testOne("small", 2**8);
+    testOne("big", 2**10);
+    testOne("bigger", 2**12);
+    testOne("huge", 2**14);
     const end = new Date();
     console.log(`Crusher - total time: ${+end - +start}`);
 };
@@ -30,11 +30,11 @@ const testOne = (key, length) => {
 
 const testSpeedStore = () => {
     const start = new Date();
-    testOneSpeedStore("tiny", 8);
-    testOneSpeedStore("small", 256);
-    testOneSpeedStore("big", 1024);
-    testOneSpeedStore("bigger", 4096);
-    testOneSpeedStore("huge", 32768);
+    testOneSpeedStore("tiny", 2**6);
+    testOneSpeedStore("small", 2**8);
+    testOneSpeedStore("big", 2**10);
+    testOneSpeedStore("bigger", 2**12);
+    testOneSpeedStore("huge", 2**14);
     const end = new Date();
     console.log(`SpeedStore - total time: ${+end - +start}`);
 };
