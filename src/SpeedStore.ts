@@ -131,21 +131,13 @@ const chunkString = (str: string, numChunks: number): string[] => {
 }
 
 const encode = (_obj: any): string => {
-    // let blob = Utilities.newBlob(JSON.stringify(_obj));
-    // blob = Utilities.gzip(blob);
-    // console.log(`blob content type ${blob.getContentType()}`);
-    // const encodedString = blob.getDataAsString();
-    // console.log(`string after encode: ${encodedString}. blob content type ${blob.getContentType()}`)
-    return Compress.compress(_obj)
+
+    return JSON.stringify(_obj)
 }
 
 const decode = (encodedString: string): any => {
-    // console.log(`string before decode: ${encodedString}`);
-    // let blob = Utilities.newBlob(encodedString, "application/x-gzip");
-    // console.log(`blob`)
-    // const _obj = Utilities.ungzip(blob).getDataAsString()
 
-    const _obj = Compress.decompress(encodedString)
+    const _obj = JSON.parse(encodedString)
 
     return _obj
 }
