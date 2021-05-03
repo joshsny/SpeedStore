@@ -28,7 +28,7 @@ class SpeedStore {
     get(key: string) {
         // Get's the value for a given key - Need to check if the key exists
 
-        if (true) { // Trialing to always fetch from store
+        if (!this.memcache) { // Trialing to always fetch from store
             this.retrieveAll();
         }
         if (key in this.memcache) {
