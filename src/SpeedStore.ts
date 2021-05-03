@@ -28,7 +28,7 @@ class SpeedStore {
     get(key: string) {
         // Get's the value for a given key - Need to check if the key exists
 
-        if (!this.memcache) {
+        if (true) { // Trialing to always fetch from store
             this.retrieveAll();
         }
         if (key in this.memcache) {
@@ -40,15 +40,9 @@ class SpeedStore {
 
     retrieveAll() {
         const allStrings = this.store.getProperties();
-        for (const key in allStrings) {
-            if (!key.startsWith(this.prefix)) {
-                delete allStrings[key];
-            }
-        }
-
-        const encodedString = Object.keys(allStrings)
-            .sort()
-            .reduce((storeString, key) => {
+        // Recreate encoded string from properties
+        const sortedKeys = Object.keys(allStrings).sort();
+        const encodedString = sortedKeys.reduce((storeString, key) => {
                 if (key.startsWith(this.prefix)) {
                     storeString += allStrings[key];
                 }
@@ -57,14 +51,12 @@ class SpeedStore {
 
         if (encodedString !== "") {
             let start = new Date();
-            this.decode(encodedString);
+            this.memcache = this.decode(encodedString);
             let end = new Date();
             console.log(`decoding time: ${+end - +start}`);
         } else {
             this.memcache = {};
         }
-
-        console.log(this.memcache);
     }
 
     putAll() {
@@ -73,20 +65,20 @@ class SpeedStore {
         }
 
         let start = new Date();
-        this.encode(this.memcache);
+        const encodedString = this.encode(this.memcache);
         let end = new Date();
         const sizeReduction =
             (encodedString.length * 100) / JSON.stringify(this.memcache).length;
         console.log(
             `encoding time: ${
                 +end - +start
-            }. approx. size reduction: ${sizeReduction.toFixed(2)}%`
+            }. approx. end size: ${sizeReduction.toFixed(2)}%`
         );
 
         const chunks = chunkString(encodedString, this.numChunks);
 
         const props = chunks.reduce((chunkedProps, chunk, idx) => {
-            chunkedProps[`${this.prefix}_${idx}`] = chunk;
+            chunkedProps[`${this.prefix}_${zeroPad(idx, numDigits(this.numChunks))}`] = chunk;
 
             return chunkedProps;
         }, {});
@@ -139,15 +131,25 @@ const chunkString = (str: string, numChunks: number): string[] => {
 }
 
 const encode = (_obj: any): string => {
-    let blob = Utilities.newBlob("").setDataFromString(
-        JSON.stringify(_obj)
-    );
-    const encodedString = Utilities.gzip(blob).getDataAsString();
-    return encodedString
+    // let blob = Utilities.newBlob(JSON.stringify(_obj));
+    // blob = Utilities.gzip(blob);
+    // console.log(`blob content type ${blob.getContentType()}`);
+    // const encodedString = blob.getDataAsString();
+    // console.log(`string after encode: ${encodedString}. blob content type ${blob.getContentType()}`)
+    return Compress.compress(_obj)
 }
 
 const decode = (encodedString: string): any => {
-    let blob = Utilities.newBlob("").setDataFromString(encodedString);
-    const _obj = JSON.parse(Utilities.ungzip(blob).getDataAsString());
+    // console.log(`string before decode: ${encodedString}`);
+    // let blob = Utilities.newBlob(encodedString, "application/x-gzip");
+    // console.log(`blob`)
+    // const _obj = Utilities.ungzip(blob).getDataAsString()
+
+    const _obj = Compress.decompress(encodedString)
+
     return _obj
 }
+
+const zeroPad = (num, places) => String(num).padStart(places, '0')
+
+const numDigits = (num) => (Math.log(num) * Math.LOG10E + 1) | 0;

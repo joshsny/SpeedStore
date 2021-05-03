@@ -1,13 +1,11 @@
-import { getStore, SpeedStore } from "SpeedStore";
+import { SpeedStore } from "SpeedStore";
 
 
 const runTests = () => {
-    testSpeedStore();
-    // clean up
     PropertiesService.getScriptProperties().deleteAllProperties();
-
+    testSpeedStore();
+    PropertiesService.getScriptProperties().deleteAllProperties();
     testCrusher();
-    // clean up
     PropertiesService.getScriptProperties().deleteAllProperties();
 };
 
