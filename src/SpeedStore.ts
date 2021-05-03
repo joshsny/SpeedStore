@@ -1,4 +1,5 @@
 import { Compress } from 'Compress.js'
+import { LZipper } from 'LZipper';
 
 export { SpeedStore };
     
@@ -132,12 +133,12 @@ const chunkString = (str: string, numChunks: number): string[] => {
 
 const encode = (_obj: any): string => {
 
-    return JSON.stringify(_obj)
+    return LZipper.compress(JSON.stringify(_obj))
 }
 
 const decode = (encodedString: string): any => {
 
-    const _obj = JSON.parse(encodedString)
+    const _obj = JSON.parse(LZipper.decompress(encodedString));
 
     return _obj
 }
