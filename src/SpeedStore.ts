@@ -3,9 +3,11 @@ import { Compress } from 'Compress.js'
 export { SpeedStore };
     
 type SpeedStoreConfig  = {
-    store: GoogleAppsScript.Properties.Properties;
-    prefix: string;
-
+    store?: GoogleAppsScript.Properties.Properties;
+    prefix?: string;
+    numChunks?: number;
+    encode?: (_obj: any) => string;
+    decode?: (encodedString: string) => any;
 }
 
 class SpeedStore {
@@ -13,12 +15,14 @@ class SpeedStore {
     memcache: any;
     prefix: string;
     numChunks: number;
-    constructor(config?: SpeedStoreConfig) {
-        if (!config) {
-            this.store = PropertiesService.getScriptProperties();
-            this.prefix = 'speedstore_'
-            this.numChunks = 50
-        }
+    encode: (_obj: any) => string;
+    decode: (encodedString: string) => any;
+    constructor(config: SpeedStoreConfig = {}) {
+        this.store = config.store || PropertiesService.getScriptProperties();
+        this.prefix = config.prefix || "speedstore_";
+        this.numChunks = config.numChunks || 50;
+        this.encode = config.encode || encode;
+        this.decode = config.decode || decode;
     }
 
     get(key: string) {
@@ -38,7 +42,7 @@ class SpeedStore {
         const allStrings = this.store.getProperties();
         for (const key in allStrings) {
             if (!key.startsWith(this.prefix)) {
-                delete allStrings[key]
+                delete allStrings[key];
             }
         }
 
@@ -46,38 +50,48 @@ class SpeedStore {
             .sort()
             .reduce((storeString, key) => {
                 if (key.startsWith(this.prefix)) {
-                    storeString+=allStrings[key]
+                    storeString += allStrings[key];
                 }
                 return storeString;
-            }, '');
-        
-        this.memcache = Utilities.base64Decode(encodedString)
+            }, "");
 
-        if (this.memcache === null) {
-            this.memcache = {}
+        if (encodedString !== "") {
+            let start = new Date();
+            this.decode(encodedString);
+            let end = new Date();
+            console.log(`decoding time: ${+end - +start}`);
+        } else {
+            this.memcache = {};
         }
-        
-        console.log(this.memcache)
 
+        console.log(this.memcache);
     }
 
     putAll() {
-
         if (!this.memcache) {
-            this.retrieveAll()
+            this.retrieveAll();
         }
-        const encodedString = Utilities.base64Encode(this.memcache)
 
-        const chunks = chunkString(encodedString, this.numChunks)
+        let start = new Date();
+        this.encode(this.memcache);
+        let end = new Date();
+        const sizeReduction =
+            (encodedString.length * 100) / JSON.stringify(this.memcache).length;
+        console.log(
+            `encoding time: ${
+                +end - +start
+            }. approx. size reduction: ${sizeReduction.toFixed(2)}%`
+        );
+
+        const chunks = chunkString(encodedString, this.numChunks);
 
         const props = chunks.reduce((chunkedProps, chunk, idx) => {
-            chunkedProps[`${this.prefix}_${idx}`] = chunk
+            chunkedProps[`${this.prefix}_${idx}`] = chunk;
 
-            return chunkedProps
-        }, {})
+            return chunkedProps;
+        }, {});
 
-        this.store.setProperties(props)
-
+        this.store.setProperties(props);
     }
 
     exists(key: string) {
@@ -89,19 +103,18 @@ class SpeedStore {
     }
 
     set(key: string, value: any) {
-
         if (!this.memcache) {
-            this.retrieveAll()
+            this.retrieveAll();
         }
-        this.memcache[key] = value
-        this.putAll()
+        this.memcache[key] = value;
+        this.putAll();
     }
 
     setMany(properties: { [key: string]: any }) {
         for (const key in properties) {
             this.memcache[key] = properties[key];
         }
-        this.putAll()
+        this.putAll();
     }
 }
 
@@ -123,4 +136,18 @@ const chunkString = (str: string, numChunks: number): string[] => {
         chunks[i] = str.substr(stringPos, size)
     }
     return chunks
+}
+
+const encode = (_obj: any): string => {
+    let blob = Utilities.newBlob("").setDataFromString(
+        JSON.stringify(_obj)
+    );
+    const encodedString = Utilities.gzip(blob).getDataAsString();
+    return encodedString
+}
+
+const decode = (encodedString: string): any => {
+    let blob = Utilities.newBlob("").setDataFromString(encodedString);
+    const _obj = JSON.parse(Utilities.ungzip(blob).getDataAsString());
+    return _obj
 }
