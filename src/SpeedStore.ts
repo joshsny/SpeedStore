@@ -1,5 +1,3 @@
-import { Compress } from 'Compress.js'
-import { JSONH } from 'JSONH';
 import { LZipper } from 'LZipper';
 
 export { SpeedStore };
@@ -8,6 +6,7 @@ type SpeedStoreConfig  = {
     store?: GoogleAppsScript.Properties.Properties;
     prefix?: string;
     numChunks?: number;
+    applyCompression?: boolean;
     encode?: (_obj: any) => string;
     decode?: (encodedString: string) => any;
 }
@@ -17,14 +16,18 @@ class SpeedStore {
     memcache: any;
     prefix: string;
     numChunks: number;
+    applyCompression: boolean;
     encode: (_obj: any) => string;
     decode: (encodedString: string) => any;
     constructor(config: SpeedStoreConfig = {}) {
         this.store = config.store || PropertiesService.getScriptProperties();
         this.prefix = config.prefix || "speedstore_";
         this.numChunks = config.numChunks || 50;
-        this.encode = config.encode || encode;
-        this.decode = config.decode || decode;
+        this.applyCompression = config.applyCompression || false;
+        if (config.encode || config.decode) {
+            this.encode = config.encode || config.applyCompression ? encode : JSON.stringify;
+            this.decode = config.decode || config.applyCompression ? decode : JSON.parse;
+        }
     }
 
     get(key: string) {
@@ -134,13 +137,13 @@ const chunkString = (str: string, numChunks: number): string[] => {
 
 const encode = (_obj: any): string => {
 
-    const encoded = JSON.stringify(_obj)
+    const encoded = LZipper.decompress(JSON.stringify(_obj))
     return encoded
 }
 
 const decode = (encodedString: string): any => {
 
-    const decoded =  JSON.stringify(encodedString);
+    const decoded =  LZipper.compress(JSON.stringify(encodedString));
 
     return decoded
 }
