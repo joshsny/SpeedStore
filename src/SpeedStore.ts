@@ -135,9 +135,9 @@ class SpeedStore {
 
 var store;
 
-const getStore = (): SpeedStore => {
+const getStore = (config: SpeedStoreConfig = {}): SpeedStore => {
     if (!store) {
-        store = new SpeedStore();
+        store = new SpeedStore(config);
     }
 
     return store;

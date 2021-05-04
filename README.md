@@ -24,7 +24,6 @@
   <p align="center">
     Blazingly fast Properties storage for Google Apps Script ⚡
     <br />
-    <a href="https://github.com/joshsny/SpeedStore"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/joshsny/SpeedStore">View Demo</a>
@@ -66,13 +65,14 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About SpeedStore
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`joshsny`, `SpeedStore`, `joshsny`, `joshua@mindful.ai`, `SpeedStore`, `Blazingly fast Properties storage for Google Apps Script ⚡`
+Retrieving and saving properties in Google Apps Script can be slow, especially if there are a lot of them. SpeedStore is a blazingly fast in memory properties store which you can use to make retrieving and saving properties much easier. It stores a copy of your Properties in memory to do the following:
+  - **It only costs you for the first read (~50ms), subsequent reads are from memory rather than the store. This significantly speeds up scripts which read a lot of properties (e.g. Add-Ons).**
+  - **The store is chunked, allowing you to save/retrieve properties up to 500kb rather than only being able to store properties smaller than 9kb**
+  - **It takes care of parsing objects for you, so you don't need to JSON serialize/parse them every time.**
 
 
 <!-- GETTING STARTED -->
@@ -90,7 +90,7 @@ To get started with SpeedStore all you need to do is add the library to your App
       }
     ]
   },
-  ...
+  //...
 }
 ```
 
@@ -131,12 +131,24 @@ store.deleteAll()
 ### Configuring the store
 
 When initializing the store you can pass it configuration options. The following options are available:
-- `store` This can be one of `PropertiesService.getScriptProperties()`, `PropertiesService.getUserProperties()` or `PropertiesService.getDocumentProperties()` depending on where you want things to be stored. The default value is PropertiesService.getScriptProperties()
-- `numChunks` SpeedStore works by storing everything as one large JSON object and splitting it across multiple chunks to overcome the 9kb size limit for properties in Google Apps Script. This option determines the number of chunks the store will be split into. The default value is 50. 
-- `prefix` Chunks of your SpeedStore are stored at a prefix so they don't conflict with other values. The default value is speedstore_
-- `applyCompression` Since SpeedStore is focussed on speed, it does not compress the store by default. If you need to store very large values (over the 500kb total limit for Properties stores) setting this to true will allow you to store 2-5x the amount of data, depending on how compressible it is. The default value is false.
-- `encode` The function used to encode the store. The default value is `JSON.stringify`.
-- `decode` The function used to decode the store. The default value is `JSON.parse`.
+- `store`: This can be one of `PropertiesService.getScriptProperties()`, `PropertiesService.getUserProperties()` or `PropertiesService.getDocumentProperties()` depending on where you want things to be stored.
+- `numChunks`: SpeedStore works by storing everything as one large JSON object and splitting it across multiple chunks to overcome the 9kb size limit for properties in Google Apps Script. This option determines the number of chunks the store will be split into.
+- `prefix`: Chunks of your SpeedStore are stored at a prefix so they don't conflict with other values.
+- `applyCompression`: Since SpeedStore is focused on speed, it does not compress the store by default. If you need to store very large values (over the 500kb total limit for Properties stores) setting this to true will allow you to store 2-5x the amount of data, depending on how compressible it is.
+- `encode`: The function used to encode the store.
+- `decode`: The function used to decode the store.
+
+Here is an example with the default configuration for each setting:
+```javascript
+let store = SpeedStore.getStore({
+  store: PropertiesService.getUserProperties(),
+  numChunks: 50,
+  prefix: "speedstore_",
+  applyCompression: false,
+  encode: JSON.stringify,
+  decode: JSON.parse
+})
+```
 
 <!-- LICENSE -->
 ## License
