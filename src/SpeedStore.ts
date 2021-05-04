@@ -111,17 +111,37 @@ class SpeedStore {
         }
         this.putAll();
     }
+    delete(key: string) {
+        if (!this.memcache) {
+            this.retrieveAll();
+        }
+
+        if (key in this.memcache) {
+            delete this.memcache[key]
+        }
+
+        this.putAll()
+    }
+    deleteAll() {
+        const keys = this.store.getKeys()
+
+        for (const key of keys) {
+            if (key.startsWith(this.prefix)) {
+            this.store.deleteProperty(key)
+            }
+        }
+    }
 }
 
-// var store;
+var store;
 
-// const getStore = (): SpeedStore => {
-//     if (!store) {
-//         store = new SpeedStore();
-//     }
+const getStore = (): SpeedStore => {
+    if (!store) {
+        store = new SpeedStore();
+    }
 
-//     return store;
-// };
+    return store;
+};
 
 const chunkString = (str: string, numChunks: number): string[] => {
     const size = Math.max(Math.ceil(str.length / numChunks), 1)

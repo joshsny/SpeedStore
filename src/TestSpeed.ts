@@ -51,6 +51,4 @@ const crusher = new bmCrusher.CrusherPluginPropertyService().init({
     store: PropertiesService.getScriptProperties(),
 });
 
-const store: SpeedStore = new SpeedStore()
-
 const makeData = (length) => Array.from({ length }, () => Math.random());
