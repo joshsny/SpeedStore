@@ -16,7 +16,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/joshsny/SpeedStore">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://i.ibb.co/s6bBQFg/storage-512.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">SpeedStore</h3>
@@ -25,12 +25,12 @@
     Blazingly fast Properties storage for Google Apps Script ⚡
     <br />
     <br />
-    <br />
+    <!-- <br />
     <a href="https://github.com/joshsny/SpeedStore">View Demo</a>
     ·
     <a href="https://github.com/joshsny/SpeedStore/issues">Report Bug</a>
     ·
-    <a href="https://github.com/joshsny/SpeedStore/issues">Request Feature</a>
+    <a href="https://github.com/joshsny/SpeedStore/issues">Request Feature</a> -->
   </p>
 </p>
 
@@ -56,9 +56,8 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About SpeedStore
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!-- [![Product Name Screen Shot][product-screenshot]](https://ibb.co/jWbpGL8) -->
 
 Retrieving and saving properties in Google Apps Script can be slow, especially if there are a lot of them. SpeedStore is a blazingly fast in memory properties store which you can use to make retrieving and saving properties much easier. It stores a copy of your Properties in memory to do the following:
   - **It only costs you for the first read (~50ms), subsequent reads are from memory rather than the store. This significantly speeds up scripts which read a lot of properties (e.g. Add-Ons).**
