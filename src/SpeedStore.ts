@@ -24,10 +24,8 @@ class SpeedStore {
         this.prefix = config.prefix || "speedstore_";
         this.numChunks = config.numChunks || 50;
         this.applyCompression = config.applyCompression || false;
-        if (config.encode || config.decode) {
-            this.encode = config.encode || config.applyCompression ? encode : JSON.stringify;
-            this.decode = config.decode || config.applyCompression ? decode : JSON.parse;
-        }
+        this.encode = config.encode || config.applyCompression ? encode : JSON.stringify;
+        this.decode = config.decode || config.applyCompression ? decode : JSON.parse;
     }
 
     get(key: string) {
@@ -137,13 +135,13 @@ const chunkString = (str: string, numChunks: number): string[] => {
 
 const encode = (_obj: any): string => {
 
-    const encoded = LZipper.decompress(JSON.stringify(_obj))
+    const encoded = LZipper.compress(JSON.stringify(_obj))
     return encoded
 }
 
 const decode = (encodedString: string): any => {
 
-    const decoded =  LZipper.compress(JSON.stringify(encodedString));
+    const decoded = LZipper.decompress(JSON.parse(encodedString));
 
     return decoded
 }

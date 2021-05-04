@@ -1,7 +1,7 @@
 {
   "name": "gas-speedstore",
   "version": "0.0",
-  "description": "Blazingly fast Properties and Cache storage for Google Apps Script ⚡",
+  "description": "Blazingly fast Properties storage for Google Apps Script ⚡",
   "main": "SpeedStore.ts",
   "baseUrl": "src",
   "author": "Joshua Snyder",
