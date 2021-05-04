@@ -41,21 +41,12 @@
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
+      <a href="#about-speedstore">About SpeedStore</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#how-to-use-speedstore">How to use SpeedStore</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -160,7 +151,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@joshsny](https://twitter.com/joshsny) - joshua@mindful.ai
+Joshua Snyder - [@joshsny](https://twitter.com/joshsny) - [linkedIn](https://linkedin.com/in/joshsny)
 
 Project Link: [https://github.com/joshsny/SpeedStore](https://github.com/joshsny/SpeedStore)
 
