@@ -62,7 +62,7 @@ Retrieving and saving properties in Google Apps Script can be slow, especially i
 
 SpeedStore is a blazingly fast in memory properties store which you can use to make retrieving and saving properties much easier. It stores a copy of your Properties in memory to do the following:
   - It only costs you for the first read (~50ms), subsequent reads are from memory rather than the store. This significantly speeds up scripts which read a lot of properties (e.g. Add-Ons).
-  - The store is chunked, allowing you to save/retrieve properties up to 500kb rather than only being able to store properties smaller than 9kb
+  - The store is chunked, allowing you to save/retrieve properties up to 500kb rather than only being able to store properties smaller than 9kb. Saving larger properties does not take longer than smaller ones, since everything is split into smaller chunks and is saved in one call to the store.
   - It takes care of parsing objects for you, so you don't need to JSON serialize/parse them every time.
 
 
