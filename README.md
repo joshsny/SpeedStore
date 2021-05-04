@@ -59,10 +59,12 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://ibb.co/jWbpGL8) -->
 
-Retrieving and saving properties in Google Apps Script can be slow, especially if there are a lot of them. SpeedStore is a blazingly fast in memory properties store which you can use to make retrieving and saving properties much easier. It stores a copy of your Properties in memory to do the following:
-  - **It only costs you for the first read (~50ms), subsequent reads are from memory rather than the store. This significantly speeds up scripts which read a lot of properties (e.g. Add-Ons).**
-  - **The store is chunked, allowing you to save/retrieve properties up to 500kb rather than only being able to store properties smaller than 9kb**
-  - **It takes care of parsing objects for you, so you don't need to JSON serialize/parse them every time.**
+Retrieving and saving properties in Google Apps Script can be slow, especially if there are a lot of them.
+
+SpeedStore is a blazingly fast in memory properties store which you can use to make retrieving and saving properties much easier. It stores a copy of your Properties in memory to do the following:
+  - It only costs you for the first read (~50ms), subsequent reads are from memory rather than the store. This significantly speeds up scripts which read a lot of properties (e.g. Add-Ons).
+  - The store is chunked, allowing you to save/retrieve properties up to 500kb rather than only being able to store properties smaller than 9kb
+  - It takes care of parsing objects for you, so you don't need to JSON serialize/parse them every time.
 
 
 <!-- GETTING STARTED -->
@@ -80,7 +82,6 @@ To get started with SpeedStore all you need to do is add the library to your App
       }
     ]
   },
-  //...
 }
 ```
 
@@ -104,7 +105,11 @@ store.get('fruits')
 store.set('fruits', ['Apple', 'Orange', 'Pinapple'])
 
 // Set multiple items at the same time
-store.setMany({fruits: ['Apple', 'Orange', 'Pinapple'], vegetables: ['Cucumber', 'Avocado'], favourites: {fruit: 'Orange', vegetable: 'Avocado'}})
+store.setMany({
+  fruits: ['Apple', 'Orange', 'Pinapple'],
+  vegetables: ['Cucumber', 'Avocado'],
+  favourites: {fruit: 'Orange', vegetable: 'Avocado'}
+})
 
 // Check if something exists in the store
 store.exists('fruits')
@@ -117,8 +122,6 @@ store.deleteAll()
 ```
 
 ## Configuration
-
-### Configuring the store
 
 When initializing the store you can pass it configuration options. The following options are available:
 - `store`: This can be one of `PropertiesService.getScriptProperties()`, `PropertiesService.getUserProperties()` or `PropertiesService.getDocumentProperties()` depending on where you want things to be stored.
@@ -150,7 +153,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Joshua Snyder - [@joshsny](https://twitter.com/joshsny) - [linkedIn](https://linkedin.com/in/joshsny)
+Joshua Snyder - [@joshsny](https://twitter.com/joshsny) - [LinkedIn](https://linkedin.com/in/joshsny)
 
 Project Link: [https://github.com/joshsny/SpeedStore](https://github.com/joshsny/SpeedStore)
 
