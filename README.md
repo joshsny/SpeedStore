@@ -25,7 +25,6 @@
     Blazingly fast Properties storage for Google Apps Script ⚡
     <br />
     <br />
-    <br />
     <a href="https://script.google.com/d/1292oAlLR3zBW8f5XyI1RwTyX2kDFWCShwka_aRRhD43nyFPXB8EjA5r1/edit?usp=sharing">View Demo</a>
     ·
     <a href="https://github.com/joshsny/SpeedStore/issues">Report Bug</a>
