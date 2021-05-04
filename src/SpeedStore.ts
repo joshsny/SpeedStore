@@ -93,7 +93,6 @@ class SpeedStore {
         if (!this.memcache) {
             this.retrieveAll();
         }
-        console.log(`${key} exists? ${key in this.memcache}`);
         return key in this.memcache;
     }
 
@@ -111,6 +110,7 @@ class SpeedStore {
         }
         this.putAll();
     }
+
     delete(key: string) {
         if (!this.memcache) {
             this.retrieveAll();
