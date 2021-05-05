@@ -82,7 +82,7 @@ To get started with SpeedStore all you need to do is add the library to your App
 
 SpeedStore works best when it is used as a global variable. To do this, add the following in any file of your Google Apps Script project:
 ```javascript
-let store = SpeedStore.getStore();
+let store = SpeedStore.getStore({store: PropertiesService.getUserProperties()});
 ```
 
 <!-- USAGE EXAMPLES -->

@@ -3,7 +3,7 @@ import { LZipper } from 'LZipper';
 export { SpeedStore };
     
 type SpeedStoreConfig  = {
-    store?: GoogleAppsScript.Properties.Properties;
+    store: GoogleAppsScript.Properties.Properties;
     prefix?: string;
     numChunks?: number;
     applyCompression?: boolean;
@@ -19,8 +19,8 @@ class SpeedStore {
     applyCompression: boolean;
     encode: (_obj: any) => string;
     decode: (encodedString: string) => any;
-    constructor(config: SpeedStoreConfig = {}) {
-        this.store = config.store || PropertiesService.getScriptProperties();
+    constructor(config: SpeedStoreConfig) {
+        this.store = config.store
         this.prefix = config.prefix || "speedstore_";
         this.numChunks = config.numChunks || 50;
         this.applyCompression = config.applyCompression || false;
@@ -135,7 +135,7 @@ class SpeedStore {
 
 var store;
 
-const getStore = (config: SpeedStoreConfig = {}): SpeedStore => {
+const getStore = (config: SpeedStoreConfig): SpeedStore => {
     if (!store) {
         store = new SpeedStore(config);
     }
