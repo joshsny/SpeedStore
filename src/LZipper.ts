@@ -1,5 +1,5 @@
-export {LZipper}
-var LZipper = (function () {
+export {LZipper_}
+var LZipper_ = (function () {
     var fcc, API;
     // just shorthand from char code.
     fcc = String.fromCharCode;

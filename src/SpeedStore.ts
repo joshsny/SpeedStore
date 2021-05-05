@@ -1,6 +1,6 @@
-import { LZipper } from 'LZipper';
+import { LZipper_ } from 'LZipper';
 
-export { SpeedStore };
+export { SpeedStore_ };
     
 type SpeedStoreConfig  = {
     store: GoogleAppsScript.Properties.Properties;
@@ -11,7 +11,7 @@ type SpeedStoreConfig  = {
     decode?: (encodedString: string) => any;
 }
 
-class SpeedStore {
+class SpeedStore_ {
     store: GoogleAppsScript.Properties.Properties;
     memcache: any;
     prefix: string;
@@ -53,10 +53,7 @@ class SpeedStore {
             }, "");
 
         if (encodedString !== "") {
-            let start = new Date();
             this.memcache = this.decode(encodedString);
-            let end = new Date();
-            console.log(`decoding time: ${+end - +start}`);
         } else {
             this.memcache = {};
         }
@@ -67,18 +64,9 @@ class SpeedStore {
             this.retrieveAll();
         }
 
-        let start = new Date();
         const encodedString = this.encode(this.memcache);
-        let end = new Date();
-        const sizeReduction =
-            (encodedString.length * 100) / JSON.stringify(this.memcache).length;
-        console.log(
-            `encoding time: ${
-                +end - +start
-            }. approx. end size: ${sizeReduction.toFixed(2)}%`
-        );
 
-        const chunks = chunkString(encodedString, this.numChunks);
+        const chunks = chunkString_(encodedString, this.numChunks);
 
         const props = chunks.reduce((chunkedProps, chunk, idx) => {
             chunkedProps[`${this.prefix}_${zeroPad(idx, numDigits(this.numChunks))}`] = chunk;
@@ -133,17 +121,17 @@ class SpeedStore {
     }
 }
 
-var store;
+var store_;
 
-const getStore = (config: SpeedStoreConfig): SpeedStore => {
-    if (!store) {
-        store = new SpeedStore(config);
+var getStore = (config: SpeedStoreConfig): SpeedStore_ => {
+    if (!store_) {
+        store_ = new SpeedStore_(config);
     }
 
-    return store;
+    return store_;
 };
 
-const chunkString = (str: string, numChunks: number): string[] => {
+const chunkString_ = (str: string, numChunks: number): string[] => {
     const size = Math.max(Math.ceil(str.length / numChunks), 1)
     const chunks = new Array(numChunks)
 
@@ -155,13 +143,13 @@ const chunkString = (str: string, numChunks: number): string[] => {
 
 const encode = (_obj: any): string => {
 
-    const encoded = LZipper.compress(JSON.stringify(_obj))
+    const encoded = LZipper_.compress(JSON.stringify(_obj))
     return encoded
 }
 
 const decode = (encodedString: string): any => {
 
-    const decoded = LZipper.decompress(JSON.parse(encodedString));
+    const decoded = LZipper_.decompress(JSON.parse(encodedString));
 
     return decoded
 }
