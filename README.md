@@ -6,30 +6,24 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Stargazers][stars-shield]][stars-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
 
 <!-- PROJECT LOGO -->
-<br />
 <p align="center">
   <a href="https://github.com/joshsny/SpeedStore">
     <img src="https://i.ibb.co/s6bBQFg/storage-512.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">SpeedStore</h3>
-
   <p align="center">
     Blazingly fast Properties storage for Google Apps Script ⚡
     <br />
     <br />
-    <a href="https://script.google.com/d/1292oAlLR3zBW8f5XyI1RwTyX2kDFWCShwka_aRRhD43nyFPXB8EjA5r1/edit?usp=sharing">View Demo</a>
+    <img src="https://img.shields.io/github/stars/joshsny/SpeedStore.svg?style=for-the-badge">
+    <img src="https://img.shields.io/github/license/joshsny/SpeedStore.svg?style=for-the-badge">
+    <br />
+    <a href="https://script.google.com/d/1292oAlLR3zBW8f5XyI1RwTyX2kDFWCShwka_aRRhD43nyFPXB8EjA5r1/edit?usp=sharing"><b>View Demo</b></a>
     ·
-    <a href="https://github.com/joshsny/SpeedStore/issues">Report Bug</a>
-    <!-- ·
-    <a href="https://github.com/joshsny/SpeedStore/issues">Request Feature</a> -->
+    <a href="https://github.com/joshsny/SpeedStore/issues"><b>Report Bug</b></a>
   </p>
 </p>
 
