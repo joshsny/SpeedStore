@@ -24,8 +24,8 @@ class SpeedStore_ {
         this.prefix = config.prefix || "speedstore_";
         this.numChunks = config.numChunks || 50;
         this.applyCompression = config.applyCompression || false;
-        this.encode = config.encode || config.applyCompression ? encode : JSON.stringify;
-        this.decode = config.decode || config.applyCompression ? decode : JSON.parse;
+        this.encode = config.encode || config.applyCompression ? encode_ : JSON.stringify;
+        this.decode = config.decode || config.applyCompression ? decode_ : JSON.parse;
     }
 
     get(key: string) {
@@ -69,7 +69,7 @@ class SpeedStore_ {
         const chunks = chunkString_(encodedString, this.numChunks);
 
         const props = chunks.reduce((chunkedProps, chunk, idx) => {
-            chunkedProps[`${this.prefix}_${zeroPad(idx, numDigits(this.numChunks))}`] = chunk;
+            chunkedProps[`${this.prefix}_${zeroPad_(idx, numDigits_(this.numChunks))}`] = chunk;
 
             return chunkedProps;
         }, {});
@@ -141,19 +141,19 @@ const chunkString_ = (str: string, numChunks: number): string[] => {
     return chunks
 }
 
-const encode = (_obj: any): string => {
+const encode_ = (_obj: any): string => {
 
     const encoded = LZipper_.compress(JSON.stringify(_obj))
     return encoded
 }
 
-const decode = (encodedString: string): any => {
+const decode_ = (encodedString: string): any => {
 
     const decoded = LZipper_.decompress(JSON.parse(encodedString));
 
     return decoded
 }
 
-const zeroPad = (num, places) => String(num).padStart(places, '0')
+const zeroPad_ = (num, places) => String(num).padStart(places, '0')
 
-const numDigits = (num) => (Math.log(num) * Math.LOG10E + 1) | 0;
+const numDigits_ = (num) => (Math.log(num) * Math.LOG10E + 1) | 0;
