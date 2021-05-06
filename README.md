@@ -127,7 +127,7 @@ When initializing the store you can pass it configuration options. The following
 Here is an example with the default configuration for each setting:
 ```javascript
 let store = SpeedStore.getStore({
-  store: PropertiesService.getUserProperties(),
+  store: PropertiesService.getUserProperties(), // store is required and does not have a default value
   numChunks: 50,
   prefix: "speedstore_",
   applyCompression: false,
