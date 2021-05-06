@@ -31,7 +31,7 @@ class SpeedStore_ {
     get(key: string) {
         // Get's the value for a given key - Need to check if the key exists
 
-        if (!this.memcache) { // Trialing to always fetch from store
+        if (!this.memcache) {
             this.retrieveAll();
         }
         if (key in this.memcache) {
@@ -93,6 +93,10 @@ class SpeedStore_ {
     }
 
     setMany(properties: { [key: string]: any }) {
+        if (!this.memcache) {
+            this.retrieveAll()
+        }
+        
         for (const key in properties) {
             this.memcache[key] = properties[key];
         }
