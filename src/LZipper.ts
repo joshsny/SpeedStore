@@ -1,4 +1,4 @@
-export {LZipper_}
+export { LZipper_ };
 var LZipper_ = (function () {
     var fcc, API;
     // just shorthand from char code.

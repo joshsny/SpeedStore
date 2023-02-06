@@ -1,18 +1,14 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./src",
-    "types": [
-      "google-apps-script",
-    ],
-    "lib": [
-      "esnext"
-    ],
-    "isolatedModules": true,
-    "removeComments": true,
-    "moduleResolution": "node",
-    "target": "ES2019",
-    "module": "None",
-    "noImplicitUseStrict": true,
-    "experimentalDecorators": true,
-  }
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "types": ["google-apps-script"],
+        "lib": ["esnext"],
+        "isolatedModules": true,
+        "removeComments": true,
+        "moduleResolution": "node",
+        "target": "ES2019",
+        "module": "None",
+        "noImplicitUseStrict": true,
+        "experimentalDecorators": true
+    }
 }
