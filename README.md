@@ -69,7 +69,7 @@ To get started with SpeedStore all you need to do is add the library to your App
             {
                 "userSymbol": "SpeedStore",
                 "libraryId": "1t1E-r2T5Na3MwsE3DxRqV_2A9U5YWLXEPowWqc-dAUcoNJD0YaRgVs3D",
-                "version": "6"
+                "version": "8"
             }
         ]
     }
