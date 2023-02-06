@@ -30,7 +30,14 @@ class SpeedStore_ {
             config.decode || config.applyCompression ? decode_ : JSON.parse;
     }
 
-    get(key: string) {
+    /**
+     *  Returns the value associated with the key.
+     *
+     *  @param {String} key The key to retrieve the value for.
+     *  @return {unknown} The value associated with the key.
+     *
+     */
+    get(key: string): unknown {
         if (!this.memcache) {
             this.retrieveAll();
         }
@@ -79,6 +86,13 @@ class SpeedStore_ {
         this.store.setProperties(props);
     }
 
+    /**
+     *  Check if a value exists for the given key.
+     *
+     *  @param {String} key The key to check for.
+     *  @return {boolean} True if a value exists for the key, false otherwise.
+     *
+     */
     exists(key: string) {
         if (!this.memcache) {
             this.retrieveAll();
@@ -86,6 +100,13 @@ class SpeedStore_ {
         return this.memcache.has(key);
     }
 
+    /**
+     * Set a value for the given key.
+     * @param {String} key The key to set the value for.
+     * @param {unknown} value The value to set.
+     * @return {void}
+     *
+     */
     set(key: string, value: unknown) {
         if (!this.memcache) {
             this.retrieveAll();
@@ -94,6 +115,11 @@ class SpeedStore_ {
         this.putAll();
     }
 
+    /**
+     * Set multiple values for the given keys.
+     * @param {Object} properties An object containing key-value pairs to set.
+     * @return {void}
+     */
     setMany(properties: { [key: string]: unknown }) {
         if (!this.memcache) {
             this.retrieveAll();
@@ -105,6 +131,11 @@ class SpeedStore_ {
         this.putAll();
     }
 
+    /**
+     * Delete the value associated with the given key.
+     * @param {String} key The key to delete.
+     * @return {void}
+     */
     delete(key: string) {
         if (!this.memcache) {
             this.retrieveAll();
@@ -117,6 +148,10 @@ class SpeedStore_ {
         }
     }
 
+    /**
+     * Delete all key-value pairs associated with the store prefix.
+     * @return {void}
+     */
     deleteAll() {
         const keys = this.store.getKeys();
 

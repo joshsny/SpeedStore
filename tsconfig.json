@@ -4,7 +4,7 @@
         "types": ["google-apps-script"],
         "lib": ["esnext"],
         "isolatedModules": true,
-        "removeComments": true,
+        "removeComments": false,
         "moduleResolution": "node",
         "target": "ES2019",
         "module": "None",
