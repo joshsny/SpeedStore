@@ -27,8 +27,6 @@
   </p>
 </p>
 
-
-
 <!-- TABLE OF CONTENTS
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
@@ -46,8 +44,6 @@
   </ol>
 </details> -->
 
-
-
 <!-- ABOUT THE PROJECT -->
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://ibb.co/jWbpGL8) -->
@@ -55,116 +51,119 @@
 Retrieving and saving properties in Google Apps Script can be slow, especially if there are a lot of them.
 
 SpeedStore is a blazingly fast in memory properties store which you can use to make retrieving and saving properties much easier. It stores a copy of your Properties in memory to do the following:
-  - It only costs you for the first read (~50ms), subsequent reads are from memory rather than the store. This significantly speeds up scripts which read a lot of properties (e.g. Add-Ons).
-  - The store is chunked, allowing you to save/retrieve properties up to 500kb rather than only being able to store properties smaller than 9kb. Saving larger properties does not take longer than smaller ones, since everything is split into smaller chunks and is saved in one call to the store.
-  - It takes care of parsing objects for you, so you don't need to JSON serialize/parse them every time.
 
+-   It only costs you for the first read (~50ms), subsequent reads are from memory rather than the store. This significantly speeds up scripts which read a lot of properties (e.g. Add-Ons).
+-   The store is chunked, allowing you to save/retrieve properties up to 500kb rather than only being able to store properties smaller than 9kb. Saving larger properties does not take longer than smaller ones, since everything is split into smaller chunks and is saved in one call to the store.
+-   It takes care of parsing objects for you, so you don't need to JSON serialize/parse them every time.
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 To get started with SpeedStore all you need to do is add the library to your Apps Script project and you are good to go!
+
 ```json
 {
-  "dependencies": {
-    "libraries": [
-      {
-        "userSymbol": "SpeedStore",
-        "libraryId": "1t1E-r2T5Na3MwsE3DxRqV_2A9U5YWLXEPowWqc-dAUcoNJD0YaRgVs3D",
-        "version": "6",
-      }
-    ]
-  },
+    "dependencies": {
+        "libraries": [
+            {
+                "userSymbol": "SpeedStore",
+                "libraryId": "1t1E-r2T5Na3MwsE3DxRqV_2A9U5YWLXEPowWqc-dAUcoNJD0YaRgVs3D",
+                "version": "6"
+            }
+        ]
+    }
 }
 ```
 
 ## Create your SpeedStore
 
 SpeedStore works best when it is used as a global variable. To do this, add the following in any file of your Google Apps Script project:
+
 ```javascript
-let store = SpeedStore.getStore({store: PropertiesService.getUserProperties()});
+let store = SpeedStore.getStore({
+    store: PropertiesService.getUserProperties(),
+});
 ```
 
 <!-- USAGE EXAMPLES -->
+
 ## How to use SpeedStore
 
 Using SpeedStore is simple.
 
 ```javascript
 // Get data from the store
-store.get('fruits')
+store.get("fruits");
 
 // Set data in the store
-store.set('fruits', ['Apple', 'Orange', 'Pinapple'])
+store.set("fruits", ["Apple", "Orange", "Pinapple"]);
 
 // Set multiple items at the same time
 store.setMany({
-  fruits: ['Apple', 'Orange', 'Pinapple'],
-  vegetables: ['Cucumber', 'Avocado'],
-  favourites: {fruit: 'Orange', vegetable: 'Avocado'}
-})
+    fruits: ["Apple", "Orange", "Pinapple"],
+    vegetables: ["Cucumber", "Avocado"],
+    favourites: { fruit: "Orange", vegetable: "Avocado" },
+});
 
 // Check if something exists in the store
-store.exists('fruits')
+store.exists("fruits");
 
 // Delete something from the store
-store.delete('fruits')
+store.delete("fruits");
 
 // Remove everything from the store
-store.deleteAll()
+store.deleteAll();
 ```
 
 ## Configuration
 
 When initializing the store you can pass it configuration options. The following options are available:
-- `store`: This can be one of `PropertiesService.getScriptProperties()`, `PropertiesService.getUserProperties()` or `PropertiesService.getDocumentProperties()` depending on where you want things to be stored.
-- `numChunks`: SpeedStore works by storing everything as one large JSON object and splitting it across multiple chunks to overcome the 9kb size limit for properties in Google Apps Script. This option determines the number of chunks the store will be split into.
-- `prefix`: Chunks of your SpeedStore are stored at a prefix so they don't conflict with other values.
-- `applyCompression`: Since SpeedStore is focused on speed, it does not compress the store by default. If you need to store very large values (over the 500kb total limit for Properties stores) setting this to true will allow you to store 2-5x the amount of data, depending on how compressible it is.
-- `encode`: The function used to encode the store.
-- `decode`: The function used to decode the store.
+
+-   `store`: This can be one of `PropertiesService.getScriptProperties()`, `PropertiesService.getUserProperties()` or `PropertiesService.getDocumentProperties()` depending on where you want things to be stored.
+-   `numChunks`: SpeedStore works by storing everything as one large JSON object and splitting it across multiple chunks to overcome the 9kb size limit for properties in Google Apps Script. This option determines the number of chunks the store will be split into.
+-   `prefix`: Chunks of your SpeedStore are stored at a prefix so they don't conflict with other values.
+-   `applyCompression`: Since SpeedStore is focused on speed, it does not compress the store by default. If you need to store very large values (over the 500kb total limit for Properties stores) setting this to true will allow you to store 2-5x the amount of data, depending on how compressible it is.
+-   `encode`: The function used to encode the store.
+-   `decode`: The function used to decode the store.
 
 Here is an example with the default configuration for each setting:
+
 ```javascript
 let store = SpeedStore.getStore({
-  store: PropertiesService.getUserProperties(), // store is required and does not have a default value
-  numChunks: 50,
-  prefix: "speedstore_",
-  applyCompression: false,
-  encode: JSON.stringify,
-  decode: JSON.parse
-})
+    store: PropertiesService.getUserProperties(), // store is required and does not have a default value
+    numChunks: 50,
+    prefix: "speedstore_",
+    applyCompression: false,
+    encode: JSON.stringify,
+    decode: JSON.parse,
+});
 ```
 
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
-
 <!-- CONTACT -->
+
 ## Contact
 
 Joshua Snyder - [@joshsny](https://twitter.com/joshsny) - [LinkedIn](https://linkedin.com/in/joshsny)
 
 Project Link: [https://github.com/joshsny/SpeedStore](https://github.com/joshsny/SpeedStore)
 
-
-
 <!-- ACKNOWLEDGEMENTS -->
+
 ## Acknowledgements
 
-* [LZipper - Used for compression](https://github.com/blindman67/LZipper)
-* Icon by <a href="https://freeicons.io/profile/823">Muhammad Haq</a> on <a href="https://freeicons.io">freeicons.io</a>
-                                
-
-
-
-
+-   [LZipper - Used for compression](https://github.com/blindman67/LZipper)
+-   Icon by <a href="https://freeicons.io/profile/823">Muhammad Haq</a> on <a href="https://freeicons.io">freeicons.io</a>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/joshsny/SpeedStore.svg?style=for-the-badge
 [contributors-url]: https://github.com/joshsny/SpeedStore/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/joshsny/SpeedStore.svg?style=for-the-badge
