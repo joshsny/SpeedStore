@@ -2,6 +2,16 @@ import { LZipper_ } from "LZipper";
 
 export { SpeedStore_ };
 
+/**
+ * Configuration for SpeedStore.
+ * @typedef {Object} SpeedStoreConfig
+ * @property {GoogleAppsScript.Properties.Properties} store - The store object.
+ * @property {string} [prefix] - Optional prefix for the store.
+ * @property {number} [numChunks] - Optional number of chunks.
+ * @property {boolean} [applyCompression] - Optional flag indicating whether to apply compression.
+ * @property {function} [encode] - Optional custom encoding function.
+ * @property {function} [decode] - Optional custom decoding function.
+ */
 type SpeedStoreConfig = {
     store: GoogleAppsScript.Properties.Properties;
     prefix?: string;
@@ -19,21 +29,27 @@ class SpeedStore_ {
     applyCompression: boolean;
     encode: (_obj: unknown) => string;
     decode: (encodedString: string) => unknown;
+
+    /**
+     * Create a SpeedStore.
+     * @param {SpeedStoreConfig} config - Configuration for the SpeedStore.
+     */
     constructor(config: SpeedStoreConfig) {
         this.store = config.store;
         this.prefix = config.prefix || "speedstore_";
         this.numChunks = config.numChunks || 50;
         this.applyCompression = config.applyCompression || false;
         this.encode =
-            config.encode || config.applyCompression ? encode_ : JSON.stringify;
+            config.encode ||
+            (config.applyCompression ? encode_ : JSON.stringify);
         this.decode =
-            config.decode || config.applyCompression ? decode_ : JSON.parse;
+            config.decode || (config.applyCompression ? decode_ : JSON.parse);
     }
 
     /**
      *  Returns the value associated with the key.
      *
-     *  @param {String} key The key to retrieve the value for.
+     *  @param {string} key The key to retrieve the value for.
      *  @return {unknown} The value associated with the key.
      *
      */
@@ -89,7 +105,7 @@ class SpeedStore_ {
     /**
      *  Check if a value exists for the given key.
      *
-     *  @param {String} key The key to check for.
+     *  @param {string} key The key to check for.
      *  @return {boolean} True if a value exists for the key, false otherwise.
      *
      */
@@ -102,7 +118,7 @@ class SpeedStore_ {
 
     /**
      * Set a value for the given key.
-     * @param {String} key The key to set the value for.
+     * @param {string} key The key to set the value for.
      * @param {unknown} value The value to set.
      * @return {void}
      *
@@ -133,7 +149,7 @@ class SpeedStore_ {
 
     /**
      * Delete the value associated with the given key.
-     * @param {String} key The key to delete.
+     * @param {string} key The key to delete.
      * @return {void}
      */
     delete(key: string) {
@@ -167,6 +183,10 @@ class SpeedStore_ {
 
 var store_;
 
+/**
+ * Create a SpeedStore.
+ * @param {SpeedStoreConfig} config - Configuration for the SpeedStore.
+ */
 var getStore = (config: SpeedStoreConfig): SpeedStore_ => {
     if (!store_) {
         store_ = new SpeedStore_(config);
@@ -191,7 +211,7 @@ const encode_ = (_obj: unknown): string => {
 };
 
 const decode_ = (encodedString: string): unknown => {
-    const decoded = LZipper_.decompress(JSON.parse(encodedString));
+    const decoded = JSON.parse(LZipper_.decompress(encodedString));
 
     return decoded;
 };
