@@ -7,18 +7,18 @@ type SpeedStoreConfig = {
     prefix?: string;
     numChunks?: number;
     applyCompression?: boolean;
-    encode?: (_obj: any) => string;
-    decode?: (encodedString: string) => any;
+    encode?: (_obj: unknown) => string;
+    decode?: (encodedString: string) => unknown;
 };
 
 class SpeedStore_ {
     store: GoogleAppsScript.Properties.Properties;
-    memcache: any;
+    memcache?: Map<string, unknown>;
     prefix: string;
     numChunks: number;
     applyCompression: boolean;
-    encode: (_obj: any) => string;
-    decode: (encodedString: string) => any;
+    encode: (_obj: unknown) => string;
+    decode: (encodedString: string) => unknown;
     constructor(config: SpeedStoreConfig) {
         this.store = config.store;
         this.prefix = config.prefix || "speedstore_";
@@ -30,22 +30,27 @@ class SpeedStore_ {
             config.decode || config.applyCompression ? decode_ : JSON.parse;
     }
 
-    get(key: string) {
-        // Get's the value for a given key - Need to check if the key exists
-
+    /**
+     *  Returns the value associated with the key.
+     *
+     *  @param {String} key The key to retrieve the value for.
+     *  @return {unknown} The value associated with the key.
+     *
+     */
+    get(key: string): unknown {
         if (!this.memcache) {
             this.retrieveAll();
         }
-        if (key in this.memcache) {
-            return this.memcache[key];
-        } else {
-            return null;
-        }
+
+        const value = this.memcache.get(key) ?? null;
+
+        const deepClone = this.decode(this.encode(value));
+
+        return deepClone;
     }
 
     retrieveAll() {
         const allStrings = this.store.getProperties();
-        // Recreate encoded string from properties
         const sortedKeys = Object.keys(allStrings).sort();
         const encodedString = sortedKeys.reduce((storeString, key) => {
             if (key.startsWith(this.prefix)) {
@@ -55,9 +60,9 @@ class SpeedStore_ {
         }, "");
 
         if (encodedString !== "") {
-            this.memcache = this.decode(encodedString);
+            this.memcache = new Map(Object.entries(this.decode(encodedString)));
         } else {
-            this.memcache = {};
+            this.memcache = new Map();
         }
     }
 
@@ -66,7 +71,7 @@ class SpeedStore_ {
             this.retrieveAll();
         }
 
-        const encodedString = this.encode(this.memcache);
+        const encodedString = this.encode(Object.fromEntries(this.memcache));
 
         const chunks = chunkString_(encodedString, this.numChunks);
 
@@ -81,43 +86,72 @@ class SpeedStore_ {
         this.store.setProperties(props);
     }
 
+    /**
+     *  Check if a value exists for the given key.
+     *
+     *  @param {String} key The key to check for.
+     *  @return {boolean} True if a value exists for the key, false otherwise.
+     *
+     */
     exists(key: string) {
         if (!this.memcache) {
             this.retrieveAll();
         }
-        return key in this.memcache;
+        return this.memcache.has(key);
     }
 
-    set(key: string, value: any) {
+    /**
+     * Set a value for the given key.
+     * @param {String} key The key to set the value for.
+     * @param {unknown} value The value to set.
+     * @return {void}
+     *
+     */
+    set(key: string, value: unknown) {
         if (!this.memcache) {
             this.retrieveAll();
         }
-        this.memcache[key] = value;
+        this.memcache.set(key, value);
         this.putAll();
     }
 
-    setMany(properties: { [key: string]: any }) {
+    /**
+     * Set multiple values for the given keys.
+     * @param {Object} properties An object containing key-value pairs to set.
+     * @return {void}
+     */
+    setMany(properties: { [key: string]: unknown }) {
         if (!this.memcache) {
             this.retrieveAll();
         }
 
-        for (const key in properties) {
-            this.memcache[key] = properties[key];
+        for (const [key, value] of Object.entries(properties)) {
+            this.memcache.set(key, value);
         }
         this.putAll();
     }
 
+    /**
+     * Delete the value associated with the given key.
+     * @param {String} key The key to delete.
+     * @return {void}
+     */
     delete(key: string) {
         if (!this.memcache) {
             this.retrieveAll();
         }
 
-        if (key in this.memcache) {
-            delete this.memcache[key];
-        }
+        const existed = this.memcache.delete(key);
 
-        this.putAll();
+        if (existed) {
+            this.putAll();
+        }
     }
+
+    /**
+     * Delete all key-value pairs associated with the store prefix.
+     * @return {void}
+     */
     deleteAll() {
         const keys = this.store.getKeys();
 
@@ -126,6 +160,8 @@ class SpeedStore_ {
                 this.store.deleteProperty(key);
             }
         }
+
+        this.memcache = new Map();
     }
 }
 
@@ -149,12 +185,12 @@ const chunkString_ = (str: string, numChunks: number): string[] => {
     return chunks;
 };
 
-const encode_ = (_obj: any): string => {
+const encode_ = (_obj: unknown): string => {
     const encoded = LZipper_.compress(JSON.stringify(_obj));
     return encoded;
 };
 
-const decode_ = (encodedString: string): any => {
+const decode_ = (encodedString: string): unknown => {
     const decoded = LZipper_.decompress(JSON.parse(encodedString));
 
     return decoded;
